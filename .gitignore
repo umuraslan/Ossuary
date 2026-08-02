@@ -1,4 +1,5 @@
 raw*
 *.state
 pre-built.zip
-
+*.tar
+OZET.md
