@@ -1,30 +1,9 @@
-
 #!/usr/bin/env python3
-"""Pack the four main files of ePHACTn's pre-built dataset:
+"""Pack an ePHACTn input set into a single Parquet bundle.
 
-input.state.gz - ASR file
-input_binary.state.gz - Binary ASR file
-input.fasta - MSA file
-input.treefile - Tree file
-
-Inputs may be .gz/.xz/.bz2 compressed, and the result directory may be given
-as a tar archive, which is streamed rather than extracted.
-
-Usage:
-    python ossuary.py chr1_100001-110000.tar [out.parquet]
-    python ossuary.py <nt.state> <binary.state> <fasta> <treefile> <out.parquet>
-
-The four input files may be given in any order; roles are detected from the
-file names, the same way a result directory is scanned.
-
-Parameter:
-    --codec {brotli,gzip,lz4,snappy,zstd} - default: brotli
-    --level LEVEL         compression level (default 9 for brotli, 13 for zstd).
-                          brotli 11 is 6% smaller but ~25x slower.
-
-Each input's newline style and file name are stored alongside the data, so
-reborn.py can restore the FASTA and treefile byte for byte, and rebuild the
-two .state files with a fresh header line (comment blocks are not kept).
+The four input files may be given in any order; roles are detected from the file
+names, the same way an input directory is scanned. See README.md for usage, the
+command-line options and the packing method.
 """
 
 import argparse

@@ -2,25 +2,7 @@
 """Read a Parquet bundle produced by ossuary.py: nucleotide and gap ancestral-state
 probabilities, the alignment (FASTA) and the tree (Newick) from one interface.
 
-Library usage:
-    from ossuary_reader import BundleReader
-    b = BundleReader("bundle.parquet")
-
-    b.node_ids                  # internal nodes, in file order
-    b.sites_per_node            # 10000
-    b.species                   # leaf names, in FASTA order
-
-    b.get(node_id=2, site=11)   # -> {'nt': ('C', 0.00083, 0.99751, ...),
-                                #     'gap': ('1', 0.0, 1.0)}
-    b.tree()                    # Newick text (str)
-    b.fasta()                   # {'hg38': 'ACTAAG...', ...}
-    b.column(site=11)           # the leaf letters at that site
-
-CLI usage:
-    python ossuary_reader.py bundle.parquet                  # summary
-    python ossuary_reader.py bundle.parquet <node> <site>    # one record
-    python ossuary_reader.py bundle.parquet --tree           # print Newick
-    python ossuary_reader.py bundle.parquet --fasta          # print FASTA
+See README.md for the BundleReader API and the command line.
 """
 
 import json

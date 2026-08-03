@@ -1,25 +1,9 @@
 #!/usr/bin/env python3
-"""Restore the four original files from a Parquet bundle written by ossuary.py:
+"""Restore the four original ePHACTn input files from a Parquet bundle written by
+ossuary.py.
 
-    <name>.state          nucleotide ASR file
-    <name>_binary.state   binary (gap/indel) ASR file
-    <name>.fasta          MSA file
-    <name>.treefile       tree file
-
-The FASTA and treefile come back from their xz blobs byte for byte. The two
-.state files are regenerated from the packed columns with the original newline
-style and a fresh "Node Site State p_X..." header line; the comment block IQ-TREE
-writes above that header is not restored.
-
-Files land in outdir under the original PHACT result-directory layout:
-    outdir/1_preprocessed/<name>.fasta
-    outdir/2_iqtree_ancestral/<name>.state, <name>.treefile
-    outdir/3_binary_iqtree_ancestral/<name>_binary.state
-
-Usage:
-    python reborn.py bundle.parquet [outdir]
-    python reborn.py bundle.parquet --only state   # state, fasta, tree or all
-    python reborn.py bundle.parquet --list         # names and sizes, write nothing
+See README.md for usage, the output directory layout, and what does and does not
+come back byte for byte.
 """
 
 import argparse
