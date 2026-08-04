@@ -478,6 +478,10 @@ def main(argv=None):
     ap.add_argument("inputs", nargs="+", metavar="INPUT",
                     help="either <result_dir|result.tar> [out.parquet], or the "
                          "four input files in any order followed by <out.parquet>")
+    ap.add_argument("--outdir", default=None,
+                    help="directory to write the output file into "
+                         "(default: alongside the given output path, or the "
+                         "current directory)")
     ap.add_argument("--codec", default="brotli",
                     choices=sorted(DEFAULT_LEVEL), help="default: brotli")
     ap.add_argument("--level", type=int, default=None,
@@ -515,6 +519,10 @@ def main(argv=None):
                                         for p in paths])
     else:
         ap.error("pass either a result directory/tar, or exactly 5 paths")
+
+    if args.outdir is not None:
+        os.makedirs(args.outdir, exist_ok=True)
+        out = os.path.join(args.outdir, os.path.basename(out))
 
     print(f"nt     : {nt}\ngap    : {gap}\nfasta  : {fasta}\n"
           f"tree   : {tree}\noutput : {out}", file=sys.stderr)
