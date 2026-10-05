@@ -16,13 +16,20 @@ bundle, and `reborn.py` restores the four original files from it.
 
 ## Requirements
 
-- Python 3.10+ (tested on 3.13). The code itself uses nothing newer than 3.8; the
-  floor comes from numpy 2.1.3, which requires 3.10.
-- [numpy](https://numpy.org/) (tested with 2.1.3)
-- [pyarrow](https://arrow.apache.org/docs/python/) (tested with 19.0.0)
+- Python 3.10+ (tested on 3.13). The code itself needs only Python 3.6+ syntax; the
+  floor comes from numpy 2.1.3 and pyarrow 25.0.0, which both require 3.10.
+- [numpy](https://numpy.org/) (tested with 2.1.3 and 2.5.3)
+- [pyarrow](https://arrow.apache.org/docs/python/) (tested with 25.0.0 and 25.0.1)
+
+**Avoid pyarrow 19.0.0.** It shipped with a `size_statistics` validation regression
+([apache/arrow#45283](https://github.com/apache/arrow/issues/45283)) that raises
+`OSError: Repetition level histogram size mismatch` on valid bundles — no data is
+actually corrupted, but every column read fails. Use any other version (25.0.0 is
+what `ePHACT/backend` is said to pin).
 
 ```bash
-pip install numpy pyarrow
+pip install numpy==2.1.3 pyarrow==25.0.0   # the exact tested pair
+pip install numpy pyarrow                  # latest also works (2.5.3 / 25.0.1)
 ```
 
 These are the only third-party packages. Everything else the scripts import —
@@ -51,6 +58,7 @@ Options:
 | --- | --- |
 | `--codec {brotli,gzip,lz4,snappy,zstd}` | Compression codec (default: `brotli`) |
 | `--level LEVEL` | Compression level (default 9 for brotli, 13 for zstd). brotli 11 is 6% smaller but ~25x slower. |
+| `--outdir OUTDIR` | Directory to write the output into (default: alongside the output path, or the current directory) |
 | `--precision {5,4,3,2}` | Decimal places kept for probabilities (default 5 = lossless). 3 gives a ~64% smaller file, rounding each row so its probabilities still sum to exactly 1. |
 
 Read your parquet file:
@@ -95,8 +103,11 @@ b.get_nt(node_id=2, site=11)   # ('C', 0.001, 0.997, 0.001, 0.001)
 b.get_gap(node_id=2, site=11)  # ('0', 0.99, 0.01)
 
 b.tree()            # Newick text: '(hg38:0.0106668292,(panPan3:0.0069829796,...'
-b.fasta()           # {'hg38': 'ACTAAGCACACAGAGAATAATGTCTAGAATCTGAGTGCCA...', ...}
+b.sequences()       # {'hg38': 'ACTAAGCACACAGAGAATAATGTCTAGAATCTGAGTGCCA...', ...}
 b.column(site=11)   # {'hg38': 'C', 'panPan3': '-', 'panTro6': '-', ...}
+
+b.treefile          # bytes: the .treefile contents, byte for byte
+b.fasta             # bytes: the .fasta contents, byte for byte
 ```
 
 `get`, `get_nt` and `get_gap` return `None` when the node is unknown or the site is
