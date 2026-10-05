@@ -2,7 +2,7 @@
 
 Ossuary is a tool that packs the processed ePHACTn inputs into a single Parquet file.
 
-A ePHACTn input set consists of four files:
+ePHACTn input set consists of four files:
 
 | File | Role |
 | --- | --- |
